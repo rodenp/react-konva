@@ -6,6 +6,6 @@ export default defineConfig({
   plugins: [react()],
   server: {
     open: true,
-    allowedHosts: ["r6hj8h-5173.csb.app"],
+    allowedHosts: ["n6q5yp-5173.csb.app", "khwfv7-5173.csb.app"],
   },
 });
