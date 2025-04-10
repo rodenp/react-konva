@@ -22,13 +22,6 @@ interface Point {
   y: number;
 }
 
-interface Box {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
-
 interface KonvaAppHooks {
   addRectangle: () => void;
   addCircle: () => void;
@@ -159,7 +152,7 @@ const useKonvaApp = (containerId: string): KonvaAppHooks => {
         
         const group = groups.find(g => g.id === id);
         return group ? group.node : null;
-      }).filter((node): node is Konva.Node => node !== null);
+      }).filter((node): node is Konva.Shape | Konva.Group => node !== null);
       
       // Check if any selected shape is in a group
       const isAnySelectedInGroup = selectedIds.some(id => {
@@ -188,7 +181,8 @@ const useKonvaApp = (containerId: string): KonvaAppHooks => {
         selectionTransformerRef.current.enabledAnchors(['top-left', 'top-center', 'top-right', 'middle-right', 'middle-left', 'bottom-left', 'bottom-center', 'bottom-right']);
       }
       
-      selectionTransformerRef.current.nodes(nodes);
+      // Cast to Node[] since the transformer accepts Node[] but our filtered array is more specific
+      selectionTransformerRef.current.nodes(nodes as Konva.Node[]);
     } else {
       selectionTransformerRef.current.nodes([]);
     }
@@ -197,11 +191,11 @@ const useKonvaApp = (containerId: string): KonvaAppHooks => {
     if (hoveredId && !selectedIds.includes(hoveredId)) {
       const shape = shapes.find(s => s.id === hoveredId);
       if (shape) {
-        hoverTransformerRef.current.nodes([shape.node]);
+        hoverTransformerRef.current.nodes([shape.node as Konva.Node]);
       } else {
         const group = groups.find(g => g.id === hoveredId);
         if (group) {
-          hoverTransformerRef.current.nodes([group.node]);
+          hoverTransformerRef.current.nodes([group.node as Konva.Node]);
         }
       }
     } else {
